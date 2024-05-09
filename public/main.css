@@ -1,0 +1,102 @@
+/* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%; /* Ширина контейнера */
+    margin: 0 auto; /* Центрирование контейнера по горизонтали */
+}
+
+/* Стили для заголовка */
+header {
+    background-color: #007bff; /* Цвет фона */
+    color: #fff; /* Цвет текста */
+    padding: 20px 0; /* Внутренние отступы сверху и снизу */
+    text-align: center; /* Выравнивание текста по центру */
+}
+
+/* Стили для основного контента */
+main {
+    padding: 20px 0; /* Внутренние отступы сверху и снизу */
+}
+
+/* Стили для подвала */
+footer {
+    background-color: #f8f9fa; /* Цвет фона */
+    padding: 10px 0; /* Внутренние отступы сверху и снизу */
+    text-align: center; /* Выравнивание текста по центру */
+}
+
+/* Стили для таблицы */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+th {
+    background-color: #007bff;
+    color: #fff;
+}
+.login-container {
+    width: 300px;
+    margin: 100px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+.login-container a {
+    color: black; /* установите белый цвет для ссылки */
+    text-decoration: none; /* уберите подчеркивание ссылки, если оно есть */
+    transition: border-bottom 0.3s ease;
+}
+.login-container a:hover {
+    text-decoration: underline; /* добавьте подчеркивание при наведении на ссылку */
+    border-bottom: 1px solid white;
+}
