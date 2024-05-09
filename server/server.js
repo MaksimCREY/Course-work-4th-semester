@@ -2,6 +2,7 @@
 const express = require('express');
 const mssql = require('mssql');
 const app = express();
+const cors = require('cors');
 const PORT = process.env.PORT || 5500;
 
 // Подключение к базе данных
