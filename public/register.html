@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
+    <link rel="stylesheet" href="style.css">
  </head>
  <body>
     <h2>Регистрация</h2>
-    <form id="registerForm">
+    <form id="registerForm" form="POST">
         <div>
             <label for="email">Email</label>
             <input type="email" id="email" name="email" required>
@@ -34,7 +35,7 @@
             // Здесь можно добавить дополнительную проверку данных перед отправкой на сервер
 
             // Отправляем данные на сервер
-            fetch("/register", {
+            fetch("/public/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

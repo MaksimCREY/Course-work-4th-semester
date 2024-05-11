@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Учет студентов</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h2 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: calc(100% - 20px);
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            width: calc(100% - 20px);
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Учет студентов</h1>
+
+    
+
+    <!-- Таблица со списком студентов -->
+    <h2>Список студентов</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ФИО</th>
+            <th>Курс</th>
+            <th>Группа</th>
+            <th>Аттестация</th>
+            <th>Адрес</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Здесь будут данные о студентах -->
+        </tbody>
+    </table>
+<!-- Форма для добавления нового студента -->
+<form id="addStudentForm" onsubmit="event.preventDefault(); addStudent();">
+    <h2>Добавить студента</h2>
+    <label for="fullName">ФИО:</label>
+    <input type="text" id="fullName" name="fullName" required><br>
+
+    <label for="course">Курс:</label>
+    <input type="number" id="course" name="course" min="1" max="6" required><br>
+
+    <label for="group">Группа:</label>
+    <input type="text" id="group" name="group" required><br>
+
+    <label for="status">Аттестация:</label>
+    <select id="status" name="status">
+        <option value="Сдал">Сдал</option>
+        <option value="Не сдал">Не сдал</option>
+    </select><br>
+
+    <label for="address">Адрес:</label>
+    <input type="text" id="address" name="address"><br>
+
+    <button type="submit">Добавить</button>
+</form>
+    <!-- Форма для удаления студента -->
+    <form action="/students/delete" method="POST">
+        <h2>Удалить студента</h2>
+        <label for="studentId">ID студента:</label>
+        <input type="text" id="studentId" name="studentId" required><br>
+        <button type="submit">Удалить</button>
+    </form>
+
+    <!-- Форма для изменения данных студента -->
+    <form action="/students/update" method="POST">
+        <h2>Изменить данные студента</h2>
+        <label for="studentIdUpdate">ID студента:</label>
+        <input type="text" id="studentIdUpdate" name="studentIdUpdate" required><br>
+
+        <label for="fullNameUpdate">Новое ФИО:</label>
+        <input type="text" id="fullNameUpdate" name="fullNameUpdate"><br>
+
+        <label for="courseUpdate">Новый курс:</label>
+        <input type="number" id="courseUpdate" name="courseUpdate" min="1" max="6"><br>
+
+        <label for="groupUpdate">Новая группа:</label>
+        <input type="text" id="groupUpdate" name="groupUpdate"><br>
+
+        <label for="statusUpdate">Новая аттестация:</label>
+        <select id="statusUpdate" name="statusUpdate">
+            <option value="Сдал">Сдал</option>
+            <option value="Не сдал">Не сдал</option>
+        </select><br>
+
+        <label for="addressUpdate">Новый адрес:</label>
+        <input type="text" id="addressUpdate" name="addressUpdate"><br>
+
+        <button type="submit">Изменить</button>
+    </form>
+</div>
+
+<script>
+    async function addStudent() {
+        const fullName = document.getElementById('fullName').value;
+        const course = document.getElementById('course').value;
+        const group = document.getElementById('group').value;
+        const status = document.getElementById('status').value;
+        const address = document.getElementById('address').value;
+
+        try {
+            const response = await fetch('/students/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ fullName, course, group, status, address })
+            });
+
+            if (!response.ok) {
+                throw new Error('Ошибка при добавлении студента');
+            }
+
+            // Обновляем таблицу после успешного добавления студента
+            fetchStudentList();
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+
+    async function fetchStudentList() {
+        try {
+            const response = await fetch('/students');
+            const students = await response.json();
+            const tableBody = document.querySelector('tbody');
+            tableBody.innerHTML = '';
+
+            students.forEach(student => {
+                const row = `<tr>
+                                <td>${student.fullName}</td>
+                                <td>${student.course}</td>
+                                <td>${student.group}</td>
+                                <td>${student.status}</td>
+                                <td>${student.address}</td>
+                                <td>Действия</td>
+                            </tr>`;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+
+    // Вызываем функцию для загрузки списка студентов при загрузке страницы
+    document.addEventListener('DOMContentLoaded', fetchStudentList);
+</script>
+</body>
+</html>
