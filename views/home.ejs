@@ -13,7 +13,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 20px auto;
             padding: 20px;
             background-color: #fff;
@@ -48,7 +48,7 @@
         }
 
         button {
-            width: calc(100% - 20px);
+            
             background-color: #4CAF50;
             color: white;
             padding: 15px;
@@ -61,7 +61,7 @@
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #ff0000;
         }
 
         table {
@@ -87,87 +87,59 @@
         tr:hover {
             background-color: #ddd;
         }
+        
     </style>
 </head>
 <body>
 <div class="container">
     <h1>Учет студентов</h1>
 
-    
-
     <!-- Таблица со списком студентов -->
     <h2>Список студентов</h2>
     <table>
         <thead>
-        <tr>
-            <th>ФИО</th>
-            <th>Курс</th>
-            <th>Группа</th>
-            <th>Аттестация</th>
-            <th>Адрес</th>
-            <th>Действия</th>
-        </tr>
+            <tr>
+                <th>ФИО</th>
+                <th>Курс</th>
+                <th>Группа</th>
+                <th>Аттестация</th>
+                <th>Адрес</th>
+                <th>Действия</th>
+                <th>Редактирование</th>
+                
+                
+            </tr>
         </thead>
         <tbody>
-        <!-- Здесь будут данные о студентах -->
+            
         </tbody>
     </table>
-<!-- Форма для добавления нового студента -->
-<form id="addStudentForm" onsubmit="event.preventDefault(); addStudent();">
-    <h2>Добавить студента</h2>
-    <label for="fullName">ФИО:</label>
-    <input type="text" id="fullName" name="fullName" required><br>
 
-    <label for="course">Курс:</label>
-    <input type="number" id="course" name="course" min="1" max="6" required><br>
-
-    <label for="group">Группа:</label>
-    <input type="text" id="group" name="group" required><br>
-
-    <label for="status">Аттестация:</label>
-    <select id="status" name="status">
-        <option value="Сдал">Сдал</option>
-        <option value="Не сдал">Не сдал</option>
-    </select><br>
-
-    <label for="address">Адрес:</label>
-    <input type="text" id="address" name="address"><br>
-
-    <button type="submit">Добавить</button>
-</form>
-    <!-- Форма для удаления студента -->
-    <form action="/students/delete" method="POST">
-        <h2>Удалить студента</h2>
-        <label for="studentId">ID студента:</label>
-        <input type="text" id="studentId" name="studentId" required><br>
-        <button type="submit">Удалить</button>
-    </form>
-
-    <!-- Форма для изменения данных студента -->
-    <form action="/students/update" method="POST">
-        <h2>Изменить данные студента</h2>
-        <label for="studentIdUpdate">ID студента:</label>
-        <input type="text" id="studentIdUpdate" name="studentIdUpdate" required><br>
-
-        <label for="fullNameUpdate">Новое ФИО:</label>
-        <input type="text" id="fullNameUpdate" name="fullNameUpdate"><br>
-
-        <label for="courseUpdate">Новый курс:</label>
-        <input type="number" id="courseUpdate" name="courseUpdate" min="1" max="6"><br>
-
-        <label for="groupUpdate">Новая группа:</label>
-        <input type="text" id="groupUpdate" name="groupUpdate"><br>
-
-        <label for="statusUpdate">Новая аттестация:</label>
-        <select id="statusUpdate" name="statusUpdate">
-            <option value="Сдал">Сдал</option>
-            <option value="Не сдал">Не сдал</option>
-        </select><br>
-
-        <label for="addressUpdate">Новый адрес:</label>
-        <input type="text" id="addressUpdate" name="addressUpdate"><br>
-
-        <button type="submit">Изменить</button>
+    <!-- Форма для добавления нового студента -->
+    <form id="addStudentForm" onsubmit="event.preventDefault(); addStudent();">
+        <form id="addStudentForm" onsubmit="event.preventDefault(); addStudent();">
+            <h2>Добавить студента</h2>
+            <label for="fullName">ФИО:</label>
+            <input type="text" id="fullName" name="fullName" required><br>
+        
+            <label for="course">Курс:</label>
+            <input type="number" id="course" name="course" min="1" max="6" required><br>
+        
+            <label for="group">Группа:</label>
+            <input type="text" id="group" name="group" required><br>
+        
+            <label for="status">Аттестация:</label>
+            <select id="status" name="status">
+                <option value="Сдал">Сдал</option>
+                <option value="Не сдал">Не сдал</option>
+            </select><br>
+        
+            <label for="address">Адрес:</label>
+            <input type="text" id="address" name="address"><br>
+        
+            <button type="submit">Добавить</button>
+        </form>
+        
     </form>
 </div>
 
@@ -213,13 +185,56 @@
                                 <td>${student.group}</td>
                                 <td>${student.status}</td>
                                 <td>${student.address}</td>
-                                <td>Действия</td>
+                                <td><button onclick="deleteStudent('${student._id}')">Удалить</button></td>
+                                <td><button onclick="editStudent('${student._id}')" style="background-color:#30d5c8" button:hover:background:#fff>Редактировать</button></td>
                             </tr>`;
                 tableBody.insertAdjacentHTML('beforeend', row);
             });
         } catch (error) {
             console.error(error.message);
         }
+    }
+
+    async function deleteStudent(studentId) {
+        try {
+            const response = await fetch(`/students/${studentId}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) {
+                throw new Error('Ошибка при удалении студента');
+            }
+
+            // Обновляем таблицу после успешного удаления студента
+            fetchStudentList();
+        } catch (error) {
+            console.error(error.message);
+        }
+    }
+
+    async function editStudent(studentId){
+        const fullNameUpdate=prompt("Введите новое ФИО студента:");
+        const courseUpdate = prompt("Введите новый курс студента:");
+        const groupUpdate = prompt("Введите новую группу студента:");
+        const statusUpdate = prompt("Введите новый статус студента (Сдал/Не сдал):");
+        const addressUpdate = prompt("Введите новый адрес студента:");
+
+        try{
+            const response=await fetch(`/students/${studentId}`,{
+                method:'PATCH',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({fullNameUpdate,courseUpdate,groupUpdate,statusUpdate,addressUpdate})
+            });
+            if(!response.ok){
+                throw new Error('Ошибка при редактировании студента!')
+            }
+            fetchStudentList();
+        }catch(error){
+            console.error(message.error)
+        }
+        
     }
 
     // Вызываем функцию для загрузки списка студентов при загрузке страницы

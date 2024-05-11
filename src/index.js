@@ -74,11 +74,16 @@ app.post("/students/delete", async (req, res) => {
         const { studentId } = req.body;
 
         // Удаляем студента по ID
-        await Student.findByIdAndRemove(studentId);
+        const deletedStudent = await Student.findByIdAndRemove(studentId);
 
-        res.json({ message: 'Студент удален' });
+        if (!deletedStudent) {
+            return res.status(404).json({ message: 'Студент с указанным ID не найден' });
+        }
+
+        res.json({ message: 'Студент успешно удален' });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        console.error(error);
+        res.status(500).json({ message: 'Произошла ошибка при удалении студента' });
     }
 });
 
