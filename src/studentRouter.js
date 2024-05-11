@@ -33,15 +33,7 @@ router.post('/', async (req, res) => {
 
 
 
-// Изменение данных студента
-router.patch('/:id', async (req, res) => {
-    try {
-        const updatedStudent = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        res.json(updatedStudent);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-});
+
 router.delete('/:id', async (req, res) => {
     try {
         const result = await Student.findOneAndDelete({ _id: req.params.id });
@@ -56,10 +48,22 @@ router.delete('/:id', async (req, res) => {
 
 router.patch('/:id', async (req, res) => {
     try {
-        const updatedStudent = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const { fullNameUpdate, courseUpdate, groupUpdate, statusUpdate, addressUpdate } = req.body;
+
+        // Создаем объект с полями, которые мы хотим обновить
+        const updateFields = {};
+        if (fullNameUpdate) updateFields.fullName = fullNameUpdate;
+        if (courseUpdate) updateFields.course = courseUpdate;
+        if (groupUpdate) updateFields.group = groupUpdate;
+        if (statusUpdate) updateFields.status = statusUpdate;
+        if (addressUpdate) updateFields.address = addressUpdate;
+
+        // Ищем студента по ID и обновляем его данные
+        const updatedStudent = await Student.findByIdAndUpdate(req.params.id, updateFields, { new: true });
         res.json(updatedStudent);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 });
+
 module.exports = router;

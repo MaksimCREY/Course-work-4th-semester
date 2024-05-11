@@ -4,91 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Учет студентов</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .form-section {
-            margin-bottom: 30px;
-        }
-
-        .form-section h2 {
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        input[type="text"],
-        input[type="number"],
-        select {
-            width: calc(100% - 20px);
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-
-        button {
-            
-            background-color: #4CAF50;
-            color: white;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            box-sizing: border-box;
-            transition: background-color 0.3s ease;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background-color: #ff0000;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 15px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        tr:hover {
-            background-color: #ddd;
-        }
-        
-    </style>
+    <link rel="stylesheet" href="home.css">
 </head>
 <body>
 <div class="container">
@@ -104,8 +20,8 @@
                 <th>Группа</th>
                 <th>Аттестация</th>
                 <th>Адрес</th>
-                <th>Действия</th>
                 <th>Редактирование</th>
+                <th>Удаление</th>
                 
                 
             </tr>
@@ -144,6 +60,13 @@
 </div>
 
 <script>
+    function clearInputFields() {
+    document.getElementById('fullName').value = '';
+    document.getElementById('course').value = '';
+    document.getElementById('group').value = '';
+    document.getElementById('status').value = '';
+    document.getElementById('address').value = '';
+}
     async function addStudent() {
         const fullName = document.getElementById('fullName').value;
         const course = document.getElementById('course').value;
@@ -163,7 +86,7 @@
             if (!response.ok) {
                 throw new Error('Ошибка при добавлении студента');
             }
-
+            clearInputFields();
             // Обновляем таблицу после успешного добавления студента
             fetchStudentList();
         } catch (error) {
@@ -185,8 +108,8 @@
                                 <td>${student.group}</td>
                                 <td>${student.status}</td>
                                 <td>${student.address}</td>
-                                <td><button onclick="deleteStudent('${student._id}')">Удалить</button></td>
                                 <td><button onclick="editStudent('${student._id}')" style="background-color:#30d5c8" button:hover:background:#fff>Редактировать</button></td>
+                                <td><button onclick="deleteStudent('${student._id}')">Удалить</button></td>
                             </tr>`;
                 tableBody.insertAdjacentHTML('beforeend', row);
             });
